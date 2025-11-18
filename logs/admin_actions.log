@@ -1,0 +1,5 @@
+[2025-06-14 11:31:12] {'username':'admin','action':'view_player','ip_address':'::1','viewed_player_id':'1'}
+[2025-06-14 11:31:50] {'username':'admin','action':'view_player','ip_address':'::1','viewed_player_id':'1'}
+[2025-06-14 11:31:57] {'username':'admin','action':'view_player','ip_address':'::1','viewed_player_id':'1'}
+[2025-06-14 11:32:39] {'username':'admin','action':'view_player','ip_address':'::1','viewed_player_id':'1'}
+[2025-06-14 11:33:10] {'username':'admin','action':'up-layer','ip_address':'::1','updated_player_id':'1','changes':{"xu":"13"}}

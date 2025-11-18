@@ -1,86 +1,23 @@
-# Enable URL Rewriting
 RewriteEngine On
 
-# Force HTTPS (uncomment when SSL is available)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Các rule cho post và category
+RewriteRule ^post/([^/]+)/? index.php?page=post&id=$1 [L]
+RewriteRule ^category/([^/]+)/? index.php?page=category&id=$1 [L]
 
-# Remove www (uncomment if needed)
-# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-# RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+# Nếu không phải file hoặc thư mục, tự động thêm .php vào
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)$ $1.php [L,QSA]
 
-# Custom Error Pages
-ErrorDocument 404 /404.html
-ErrorDocument 500 /500.html
+# Nếu không phải file hoặc thư mục, chuyển sang 404
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /404 [L]
 
-# Security Headers
-<IfModule mod_headers.c>
-    # Prevent clickjacking
-    Header always append X-Frame-Options SAMEORIGIN
-    
-    # Prevent MIME type sniffing
-    Header always set X-Content-Type-Options nosniff
-    
-    # Enable XSS protection
-    Header always set X-XSS-Protection "1; mode=block"
-    
-    # Referrer Policy
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    
-    # Content Security Policy
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';"
-</IfModule>
+Options -Indexes
 
-# Compression
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/plain
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/xml
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE application/xml
-    AddOutputFilterByType DEFLATE application/xhtml+xml
-    AddOutputFilterByType DEFLATE application/rss+xml
-    AddOutputFilterByType DEFLATE application/javascript
-    AddOutputFilterByType DEFLATE application/x-javascript
-</IfModule>
+# Các rule cho api
+RewriteRule ^api/atm /api/charging/atm_pay.php [L]
+RewriteRule ^atm /api/charging/atm_pay.php [L]
+RewriteRule ^api/getAtmPay /api/charging/atm_cron.php [L]
 
-# Browser Caching
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-    ExpiresByType image/png "access plus 1 year"
-    ExpiresByType image/jpg "access plus 1 year"
-    ExpiresByType image/jpeg "access plus 1 year"
-    ExpiresByType image/gif "access plus 1 year"
-    ExpiresByType image/ico "access plus 1 year"
-    ExpiresByType image/icon "access plus 1 year"
-    ExpiresByType text/plain "access plus 1 month"
-    ExpiresByType application/pdf "access plus 1 month"
-    ExpiresByType video/mp4 "access plus 1 year"
-</IfModule>
-
-# Cache Control
-<IfModule mod_headers.c>
-    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
-        Header set Cache-Control "max-age=31536000, public"
-    </FilesMatch>
-    <FilesMatch "\.(html|htm|php)$">
-        Header set Cache-Control "max-age=3600, public"
-    </FilesMatch>
-</IfModule>
-
-# Remove Server Signature
-ServerSignature Off
-
-# Hide .htaccess files
-<Files .htaccess>
-    Order allow,deny
-    Deny from all
-</Files>
-
-# Block access to sensitive files
-<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>

@@ -1,0 +1,41 @@
+<?php
+include './CMain/connect.php';
+if (!$connect)
+    exit(0);
+$title_page = "Trang chủ";
+include './CMain/head.php';
+?>
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN"><html>
+    <head>
+		<meta name="viewport" content="width=device-width,maximum-scale=1,user-scalable=no"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="http://playersschool.vn/css/template.css" type="text/css" />		
+		<link rel="shortcut icon" href='http://27.0.14.78/dl/image/iconplayers32.png' type="image/x-icon" />
+		<link rel="apple-touch-icon" href="http://playersschool.vn/images/logo256.png" />
+		<meta name="description" content="Website chính thức của players School Online Lậu - Game nhập vai Việt Nam được yêu thích nhất trên Mobile!"/>
+
+    </head>   
+    <body>
+        <div class="body_body">
+			<div style="line-height: 3px;
+    font-size: 10px;
+    padding-right: 5px;
+       padding-bottom: 6px;">
+			<img height=12 src="http://playersschool.vn/12.png" style="vertical-align: middle;"/> 
+			<span style="vertical-align: middle;">Trò chơi dành cho người chơi 12 tuổi trở lên. Chơi quá 180 phút mỗi ngày sẽ có hại cho sức khỏe
+			</span>
+			</div>
+            <div class="left_top"></div><div class="bg_top"><div class="right_top"></div></div>
+            <div class="body-content">
+            	<div class="bg-content2">
+                
+<div class="a" align="center"><a href="http://playersschool.vn/"><img src="http://playersschool.vn/images/logoweb.gif" /></a></div>
+</tr>
+                            </table>
+							</div> <div class="bg-content">          
+							<p style="color:red">LUU Ý Xem Video Hướng Dẫn Trước Khi Vào Game , bản jar mọi người chọn server Bokken la sv1 vào sv của mình nhé, bản android hack mọi người chọn server Hirosaki la sv2 vào sv của mình nhé </a></p>
+<p style="color:red"><a href="./roplop.php">Đăng ký tài khoản</a></p>
+<p style="color:red"><a href="./playerskun.apk">Tải apk goc</a></p>
+<p style="color:red"><a href="./playerskunmod.apk">Tải apk mod hack</a></p>
+<p style="color:red"><a href="./players148Kun.jar">Tải jar</a></p>
+<p style="color:red"><a href="https://drive.google.com/file/d/1U_L_3RuHqnHXsde6HxVird8cfNT4ErVJ/view?usp=drivesdk">video hướng dẫn cách vào game cho ảndroid</a></p>

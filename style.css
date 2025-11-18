@@ -1,0 +1,364 @@
+
+@-webkit-keyframes snowflakes-fall {
+    0% {top:-10%}
+    100% {top:100%}
+  }
+  @-webkit-keyframes snowflakes-shake {
+    0%,100% {-webkit-transform:translateX(0);transform:translateX(0)}
+    50% {-webkit-transform:translateX(80px);transform:translateX(80px)}
+  }
+  @keyframes snowflakes-fall {
+    0% {top:-10%}
+    100% {top:100%}
+  }
+  @keyframes snowflakes-shake {
+    0%,100%{ transform:translateX(0)}
+    50% {transform:translateX(80px)}
+  }
+  .snowflake {
+    color: #fff;
+    font-size: 1em;
+    font-family: Arial, sans-serif;
+    text-shadow: 0 0 5px #000;
+    position:fixed;
+    top:-10%;
+    z-index:9999;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    cursor:default;
+    -webkit-animation-name:snowflakes-fall,snowflakes-shake;
+    -webkit-animation-duration:10s,3s;
+    -webkit-animation-timing-function:linear,ease-in-out;
+    -webkit-animation-iteration-count:infinite,infinite;
+    -webkit-animation-play-state:running,running;
+    animation-name:snowflakes-fall,snowflakes-shake;
+    animation-duration:10s,3s;
+    animation-timing-function:linear,ease-in-out;
+    animation-iteration-count:infinite,infinite;
+    animation-play-state:running,running;
+  }
+  .snowflake:nth-of-type(0){
+    left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s
+  }
+  .snowflake:nth-of-type(1){
+    left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s
+  }
+  .snowflake:nth-of-type(2){
+    left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s
+  }
+  .snowflake:nth-of-type(3){
+    left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s
+  }
+  .snowflake:nth-of-type(4){
+    left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s
+  }
+  .snowflake:nth-of-type(5){
+    left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s
+  }
+  .snowflake:nth-of-type(6){
+    left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s
+  }
+  .snowflake:nth-of-type(7){
+    left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s
+  }
+  .snowflake:nth-of-type(8){
+    left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s
+  }
+  .snowflake:nth-of-type(9){
+    left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s
+  }
+  .snowflake:nth-of-type(10){
+    left:25%;-webkit-animation-delay:2s,0s;animation-delay:2s,0s
+  }
+  .snowflake:nth-of-type(11){
+    left:65%;-webkit-animation-delay:4s,2.5s;animation-delay:4s,2.5s
+  }
+    .btn-primary {
+        border-color: #f44336 !important;
+        color: #fff !important;
+    }
+
+    .border-primary {
+        border-color: #f44336 !important;
+    }
+
+    .bg-primary,
+    .btn-primary {
+        background-color: #f44336 !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #f44336;
+        border-color: #f44336;
+    }
+
+    .btn-outline-primary {
+        color: #f44336;
+        border-color: #f44336;
+    }
+
+  .feature-box {
+    padding: 38px 30px;
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.5); /* Giá trị RGBA: (đỏ, xanh lá cây, xanh dương, độ trong suốt) */
+    box-shadow: 0 0 29px 0 rgb(18 66 101 / 8%);
+    transition: all 0.3s ease-in-out;
+    border-radius: 8px;
+    z-index: 1;
+    width: 100%;
+}
+.bg {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.5); /* Giá trị RGBA: (đỏ, xanh lá cây, xanh dương, độ trong suốt) */
+  box-shadow: 0 0 29px 0 rgb(18 66 101 / 8%);
+  transition: all 0.3s ease-in-out;
+  border-radius: 8px;
+  z-index: 1;
+  width: 100%;
+}
+
+
+
+    .feature-icon {
+        font-size: 1.8em;
+        margin-bottom: 1rem;
+    }
+
+    .feature-title {
+        font-size: 1.2em;
+        font-weight: 500;
+        padding-bottom: 0.25rem;
+        text-decoration: none;
+        color: #212529;
+    }
+
+    .list-group-item.active {
+        background-color: #f44336;
+        border-color: #f44336;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+        background-color: #f44336;
+    }
+
+    .nav-link {
+        color: #f44336;
+    }
+
+    .nav-link:focus, .nav-link:hover {
+        color: #cd3a2f;
+    }
+     body {
+           /* background-image: url("/images/logoweb.gif");*/
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 1;
+            filter: alpha(opacity=100);
+         
+        }
+    .greyy{
+        color: #000000;
+    }
+        @media (max-width: 844px) {
+    body {
+        /*background-image: url("/images/logoweb.gif");*/
+        opacity: 1;
+        filter: alpha(opacity=100);
+        background-size: 1500px 1000px;
+    }
+    .greyy{
+        color: #ff00ff;
+    }
+
+  }
+
+.item-container {
+    border-radius: 10px; /* Điều chỉnh giá trị này để thay đổi độ cong của góc */
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.item {
+    background: #fef7f8;
+    border-bottom: 2px solid #8e8c8c8a;
+    display: flex;
+    justify-content: space-around;
+    padding: 5px 0;
+}
+
+.item-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    padding: 0 5px;
+}
+
+.item-img img {
+    width: 80%;
+}
+
+.item-title {
+    font-weight: 600;
+    width: 130px;
+}
+
+.item-btn {
+    display: flex;
+    align-items: center;
+}
+
+.item-btn button {
+    width: 60px;
+    height: 25px;
+    margin-left: 3px;
+    margin-right: 2px;
+    border-radius: 5px;
+    background-color: #f0ecea;
+    border: 0;
+    padding: 2px;
+}
+
+.item-btn button:focus {
+    border: 1px solid white;
+}
+
+.box-collap {
+    background: #f5beb3;
+    padding: 10px;
+    border-bottom: 2px solid #8e8c8c8a;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.box-collap p {
+    font-weight: 600;
+    font-family: 'Courier';
+}
+
+.item-container .collapse {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.button1 {
+    background-color: white;
+    color: #fef7f8;
+    border: 2px solid #fef7f8;
+    border-radius: 8px; /* Điều chỉnh giá trị này để thay đổi độ cong của góc */
+}
+
+.button1:hover {
+    background-color: #fef7f8;
+    color: white;
+}
+
+    .item-container {
+        border-radius: 10px; /* Điều chỉnh giá trị này để thay đổi độ cong của góc */
+        overflow: hidden;
+        margin-bottom: 5px;
+    }
+
+    .item {
+        background: #fef7f8;
+        border-bottom: 2px solid #8e8c8c8a;
+        display: flex;
+        justify-content: space-around;
+        padding: 5px 0;
+
+        border: 1px solid #feb2b2;
+        border-radius: 16px;
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.051);
+        
+    }
+
+    .item-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        padding: 0 5px;
+    }
+
+    .item-img img {
+        width: 80%;
+    }
+
+    .item-title {
+        font-weight: 600;
+        width: 130px;
+    }
+
+    .item-btn {
+        display: flex;
+        align-items: center;
+        
+    }
+
+    .item-btn button {
+        width: 60px;
+        height: 25px;
+        margin-left: 3px;
+        margin-right: 2px;
+        border-radius: 5px;
+        background-color: #f0ecea;
+        border: 0;
+        padding: 2px;
+    }
+
+    .item-btn button:focus {
+        border: 1px solid white;
+    }
+
+    .box-collap {
+        background: #f5beb3;
+        padding: 10px;
+        border-bottom: 2px solid #8e8c8c8a;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .box-collap p {
+        font-weight: 600;
+        font-family: 'Courier';
+    }
+
+    .item-container .collapse {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .button1 {
+        background-color: white;
+        color: #fef7f8;
+        border: 2px solid #fef7f8;
+        border-radius: 8px; /* Điều chỉnh giá trị này để thay đổi độ cong của góc */
+    }
+
+    .button1:hover {
+        background-color: #fef7f8;
+        color: white;
+    }
+    .shop-header {
+        background-color: #db3646;
+        padding: 10px;
+        border-radius: 10px; /* Điều chỉnh giá trị này để thay đổi độ cong của góc */
+        margin-bottom: 20px;
+    }
+
+    .shop-header h2 {
+        color: #fef7f8;
+        margin: 0;
+    }
+    .khoangcach {
+        padding: 5px;
+      }
+    
