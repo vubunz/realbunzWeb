@@ -7,21 +7,21 @@
 
 const CountdownController = (() => {
   // Interval ID để có thể clear nếu cần
-  let intervalId = null
+  let intervalId = null;
 
-  // Declare CountdownModel and CountdownView variables
-  const CountdownModel = window.CountdownModel // Assuming CountdownModel is available globally
-  const CountdownView = window.CountdownView // Assuming CountdownView is available globally
+  // Sử dụng trực tiếp CountdownModel và CountdownView được khai báo global
+  const CountdownModelRef = CountdownModel;
+  const CountdownViewRef = CountdownView;
 
   /**
    * Cập nhật countdown
    */
   function update() {
-    const timeRemaining = CountdownModel.getTimeRemaining()
-    const progress = CountdownModel.getProgress()
+    const timeRemaining = CountdownModelRef.getTimeRemaining();
+    const progress = CountdownModelRef.getProgress();
 
-    CountdownView.render(timeRemaining)
-    CountdownView.renderProgress(progress)
+    CountdownViewRef.render(timeRemaining);
+    CountdownViewRef.renderProgress(progress);
   }
 
   /**
@@ -29,13 +29,13 @@ const CountdownController = (() => {
    */
   function init() {
     // Khởi tạo view
-    CountdownView.init()
+    CountdownViewRef.init();
 
     // Cập nhật lần đầu
-    update()
+    update();
 
     // Cập nhật mỗi giây
-    intervalId = setInterval(update, 1000)
+    intervalId = setInterval(update, 1000);
   }
 
   /**
@@ -43,8 +43,8 @@ const CountdownController = (() => {
    */
   function stop() {
     if (intervalId) {
-      clearInterval(intervalId)
-      intervalId = null
+      clearInterval(intervalId);
+      intervalId = null;
     }
   }
 
@@ -52,8 +52,8 @@ const CountdownController = (() => {
    * Khởi động lại countdown
    */
   function restart() {
-    stop()
-    init()
+    stop();
+    init();
   }
 
   // Public API
@@ -62,5 +62,5 @@ const CountdownController = (() => {
     update,
     stop,
     restart,
-  }
-})()
+  };
+})();

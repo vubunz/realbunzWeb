@@ -5,42 +5,22 @@
  * =====================================================
  */
 
-// Declare controllers before using them
-const CalendarController = {
-  goToPrevMonth: () => {},
-  goToNextMonth: () => {},
-  goToToday: () => {},
-}
-
-const QuotesController = {
-  showRandomQuote: () => {},
-}
-
-const ThemeController = {
-  init: () => {},
-  toggle: () => {},
-}
-
-const CountdownController = {
-  init: () => {},
-}
-
 /**
  * Utility: Hiển thị toast notification
  * @param {string} message - Nội dung thông báo
  */
 function showToast(message) {
-  const toast = document.getElementById("toast")
-  const toastMessage = document.getElementById("toastMessage")
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toastMessage");
 
-  toastMessage.textContent = message
-  toast.classList.remove("translate-y-20", "opacity-0")
-  toast.classList.add("translate-y-0", "opacity-100")
+  toastMessage.textContent = message;
+  toast.classList.remove("translate-y-20", "opacity-0");
+  toast.classList.add("translate-y-0", "opacity-100");
 
   setTimeout(() => {
-    toast.classList.add("translate-y-20", "opacity-0")
-    toast.classList.remove("translate-y-0", "opacity-100")
-  }, 2500)
+    toast.classList.add("translate-y-20", "opacity-0");
+    toast.classList.remove("translate-y-0", "opacity-100");
+  }, 2500);
 }
 
 /**
@@ -50,30 +30,55 @@ function initKeyboardShortcuts() {
   document.addEventListener("keydown", (e) => {
     // Bỏ qua nếu đang focus vào input
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
-      return
+      return;
     }
 
     switch (e.key) {
       case "ArrowLeft":
-        CalendarController.goToPrevMonth()
-        break
+        if (
+          typeof CalendarController !== "undefined" &&
+          typeof CalendarController.goToPrevMonth === "function"
+        ) {
+          CalendarController.goToPrevMonth();
+        }
+        break;
       case "ArrowRight":
-        CalendarController.goToNextMonth()
-        break
+        if (
+          typeof CalendarController !== "undefined" &&
+          typeof CalendarController.goToNextMonth === "function"
+        ) {
+          CalendarController.goToNextMonth();
+        }
+        break;
       case "t":
       case "T":
-        CalendarController.goToToday()
-        break
+        if (
+          typeof CalendarController !== "undefined" &&
+          typeof CalendarController.goToToday === "function"
+        ) {
+          CalendarController.goToToday();
+        }
+        break;
       case "q":
       case "Q":
-        QuotesController.showRandomQuote()
-        break
+        if (
+          typeof QuotesController !== "undefined" &&
+          typeof QuotesController.showRandomQuote === "function"
+        ) {
+          QuotesController.showRandomQuote();
+        }
+        break;
       case "d":
       case "D":
-        ThemeController.toggle()
-        break
+        if (
+          typeof ThemeController !== "undefined" &&
+          typeof ThemeController.toggle === "function"
+        ) {
+          ThemeController.toggle();
+        }
+        break;
     }
-  })
+  });
 }
 
 /**
@@ -81,16 +86,66 @@ function initKeyboardShortcuts() {
  * Khởi tạo tất cả controllers khi DOM ready
  */
 document.addEventListener("DOMContentLoaded", () => {
+  // Fetch blog posts từ backend PHP (demo)
+  fetch("backend/routes/posts.php")
+    .then((res) => res.json())
+    .then((payload) => {
+      const container = document.getElementById("blogGrid");
+      if (!container || !payload || !payload.data) return;
+
+      container.innerHTML = "";
+      payload.data.forEach((post) => {
+        const article = document.createElement("article");
+        article.className =
+          "rounded-2xl bg-amber-50/80 dark:bg-slate-800 p-5 border border-amber-100 dark:border-slate-700";
+        article.innerHTML = `
+          <h4 class="font-semibold mb-2 text-slate-800 dark:text-slate-50">
+            ${post.title}
+          </h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">
+            ${post.summary || "Bài viết đang được cập nhật nội dung."}
+          </p>
+          <span class="inline-flex items-center text-xs font-medium text-slate-500 dark:text-slate-400">
+            Slug: ${post.slug}
+          </span>
+        `;
+        container.appendChild(article);
+      });
+    })
+    .catch((err) => {
+      console.error("Không tải được posts từ backend:", err);
+    });
+
   // Khởi tạo các controllers theo thứ tự
-  ThemeController.init() // Theme trước để UI không bị flash
-  CountdownController.init() // Countdown
-  CalendarController.init() // Lịch vạn niên
-  QuotesController.init() // Quotes
+  if (
+    typeof ThemeController !== "undefined" &&
+    typeof ThemeController.init === "function"
+  ) {
+    ThemeController.init(); // Theme trước để UI không bị flash
+  }
+  if (
+    typeof CountdownController !== "undefined" &&
+    typeof CountdownController.init === "function"
+  ) {
+    CountdownController.init(); // Countdown
+  }
+  if (
+    typeof CalendarController !== "undefined" &&
+    typeof CalendarController.init === "function"
+  ) {
+    CalendarController.init(); // Lịch vạn niên
+  }
+  if (
+    typeof QuotesController !== "undefined" &&
+    typeof QuotesController.init === "function"
+  ) {
+    QuotesController.init(); // Quotes
+  }
 
   // Khởi tạo keyboard shortcuts
-  initKeyboardShortcuts()
+  initKeyboardShortcuts();
 
   // Log để debug (có thể xóa sau)
-  console.log("🧧 Tết Countdown App initialized successfully!")
-  console.log("📁 MVC Architecture: Models, Views, Controllers")
-})
+  console.log("🧧 Tết Countdown App initialized successfully!");
+  console.log("📁 MVC Architecture: Models, Views, Controllers");
+});

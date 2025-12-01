@@ -5,35 +5,15 @@
  * =====================================================
  */
 
+// Sử dụng ThemeModel (model) và ThemeView (view) đã được khai báo
+
 const ThemeController = (() => {
-  // Declare ThemeModel and ThemeView
-  const ThemeModel = {
-    toggleTheme: () => {
-      // Implementation for toggling theme
-    },
-    initTheme: () => {
-      // Implementation for initializing theme
-    },
-  }
-
-  const ThemeView = {
-    init: () => {
-      // Implementation for initializing view
-    },
-    applyTheme: (theme) => {
-      // Implementation for applying theme
-    },
-    getToggleButton: () => {
-      // Implementation for getting toggle button
-    },
-  }
-
   /**
    * Toggle theme
    */
   function toggle() {
-    const newTheme = ThemeModel.toggleTheme()
-    ThemeView.applyTheme(newTheme)
+    const newTheme = ThemeModel.toggleTheme();
+    ThemeView.applyTheme(newTheme);
   }
 
   /**
@@ -41,19 +21,22 @@ const ThemeController = (() => {
    */
   function init() {
     // Khởi tạo view
-    ThemeView.init()
+    ThemeView.init();
 
     // Khởi tạo theme từ storage/system
-    const currentTheme = ThemeModel.initTheme()
-    ThemeView.applyTheme(currentTheme)
+    const currentTheme = ThemeModel.initTheme();
+    ThemeView.applyTheme(currentTheme);
 
     // Bind event
-    ThemeView.getToggleButton().addEventListener("click", toggle)
+    const btn = ThemeView.getToggleButton();
+    if (btn) {
+      btn.addEventListener("click", toggle);
+    }
   }
 
   // Public API
   return {
     init,
     toggle,
-  }
-})()
+  };
+})();

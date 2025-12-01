@@ -7,53 +7,53 @@
 
 const CalendarController = (() => {
   // State: Tháng/năm đang hiển thị
-  let displayYear = new Date().getFullYear()
-  let displayMonth = new Date().getMonth()
+  let displayYear = new Date().getFullYear();
+  let displayMonth = new Date().getMonth();
 
-  // Declare CalendarModel and CalendarView
-  const CalendarModel = window.CalendarModel // Assuming CalendarModel is available globally
-  const CalendarView = window.CalendarView // Assuming CalendarView is available globally
+  // Sử dụng trực tiếp CalendarModel và CalendarView được khai báo global
+  const CalendarModelRef = CalendarModel;
+  const CalendarViewRef = CalendarView;
 
   /**
    * Render lịch cho tháng/năm hiện tại
    */
   function renderCurrentMonth() {
-    const monthData = CalendarModel.getMonthData(displayYear, displayMonth)
-    CalendarView.render(monthData)
+    const monthData = CalendarModelRef.getMonthData(displayYear, displayMonth);
+    CalendarViewRef.render(monthData);
   }
 
   /**
    * Chuyển tháng trước
    */
   function goToPrevMonth() {
-    displayMonth--
+    displayMonth--;
     if (displayMonth < 0) {
-      displayMonth = 11
-      displayYear--
+      displayMonth = 11;
+      displayYear--;
     }
-    renderCurrentMonth()
+    renderCurrentMonth();
   }
 
   /**
    * Chuyển tháng sau
    */
   function goToNextMonth() {
-    displayMonth++
+    displayMonth++;
     if (displayMonth > 11) {
-      displayMonth = 0
-      displayYear++
+      displayMonth = 0;
+      displayYear++;
     }
-    renderCurrentMonth()
+    renderCurrentMonth();
   }
 
   /**
    * Quay về tháng hiện tại
    */
   function goToToday() {
-    const today = new Date()
-    displayYear = today.getFullYear()
-    displayMonth = today.getMonth()
-    renderCurrentMonth()
+    const today = new Date();
+    displayYear = today.getFullYear();
+    displayMonth = today.getMonth();
+    renderCurrentMonth();
   }
 
   /**
@@ -61,8 +61,12 @@ const CalendarController = (() => {
    * @param {Object} dayData - Dữ liệu ngày được click
    */
   function handleDayClick(dayData) {
-    const detail = CalendarModel.getDayDetail(dayData.day, dayData.month, dayData.year)
-    CalendarView.showDayDetail(detail)
+    const detail = CalendarModelRef.getDayDetail(
+      dayData.day,
+      dayData.month,
+      dayData.year
+    );
+    CalendarViewRef.showDayDetail(detail);
   }
 
   /**
@@ -70,19 +74,19 @@ const CalendarController = (() => {
    */
   function init() {
     // Khởi tạo view
-    CalendarView.init()
+    CalendarViewRef.init();
 
     // Đăng ký callback
-    CalendarView.onDayClick(handleDayClick)
+    CalendarViewRef.onDayClick(handleDayClick);
 
     // Bind events
-    const elements = CalendarView.getElements()
-    elements.prevMonth.addEventListener("click", goToPrevMonth)
-    elements.nextMonth.addEventListener("click", goToNextMonth)
-    elements.todayBtn.addEventListener("click", goToToday)
+    const elements = CalendarViewRef.getElements();
+    elements.prevMonth.addEventListener("click", goToPrevMonth);
+    elements.nextMonth.addEventListener("click", goToNextMonth);
+    elements.todayBtn.addEventListener("click", goToToday);
 
     // Render lần đầu
-    renderCurrentMonth()
+    renderCurrentMonth();
   }
 
   // Public API
@@ -92,5 +96,5 @@ const CalendarController = (() => {
     goToNextMonth,
     goToToday,
     renderCurrentMonth,
-  }
-})()
+  };
+})();
