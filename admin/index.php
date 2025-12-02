@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../backend/database.php';
 
 // Nếu chưa đăng nhập thì quay về trang login
 if (!isset($_SESSION['admin_id'])) {
@@ -8,6 +9,45 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 $adminName = $_SESSION['admin_name'] ?? 'Admin';
+
+// Thống kê nhanh cho dashboard
+$stats = [
+    'posts_total' => 0,
+    'posts_published' => 0,
+    'posts_draft' => 0,
+];
+$recentPosts = [];
+
+try {
+    $pdo = get_db_connection();
+
+    // Đếm bài viết
+    $stmt = $pdo->query("
+        SELECT
+          COUNT(*) AS total,
+          SUM(status = 'published') AS published,
+          SUM(status = 'draft') AS draft
+        FROM posts
+    ");
+    $row = $stmt->fetch();
+    if ($row) {
+        $stats['posts_total'] = (int) $row['total'];
+        $stats['posts_published'] = (int) $row['published'];
+        $stats['posts_draft'] = (int) $row['draft'];
+    }
+
+    // Lấy 5 bài mới nhất
+    $stmt = $pdo->query("
+        SELECT id, title, status, published_at, updated_at
+        FROM posts
+        ORDER BY updated_at DESC, id DESC
+        LIMIT 5
+    ");
+    $recentPosts = $stmt->fetchAll();
+} catch (PDOException $e) {
+    // Nếu lỗi DB thì để stats = 0 và danh sách rỗng
+    $recentPosts = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -36,11 +76,11 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             </div>
 
             <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
-                <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 text-slate-50 font-medium">
+                <a href="index" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 text-slate-50 font-medium">
                     <span>📊</span>
                     <span>Tổng quan</span>
                 </a>
-                <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300">
+                <a href="bai-viet" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300">
                     <span>📝</span>
                     <span>Bài viết (Blog)</span>
                 </a>
@@ -96,16 +136,16 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
                         <p class="text-xs text-slate-400 mb-1">Tổng bài viết</p>
-                        <p class="text-2xl font-semibold">12</p>
+                        <p class="text-2xl font-semibold"><?= $stats['posts_total'] ?></p>
                         <p class="text-[11px] text-slate-500 mt-1">
-                            Sẽ lấy số liệu thật từ bảng <code>posts</code>.
+                            Dữ liệu từ bảng <code>posts</code> (nháp + đã xuất bản).
                         </p>
                     </div>
                     <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
-                        <p class="text-xs text-slate-400 mb-1">Quotes</p>
-                        <p class="text-2xl font-semibold">30</p>
+                        <p class="text-xs text-slate-400 mb-1">Đã xuất bản</p>
+                        <p class="text-2xl font-semibold text-emerald-400"><?= $stats['posts_published'] ?></p>
                         <p class="text-[11px] text-slate-500 mt-1">
-                            Mapping với <code>QuotesModel</code> hoặc bảng <code>quotes</code>.
+                            Bài đang hiển thị ngoài trang chủ/blog.
                         </p>
                     </div>
                     <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
@@ -129,12 +169,50 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                     <div class="lg:col-span-2 rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
                         <div class="flex items-center justify-between mb-3">
                             <h2 class="text-sm font-semibold">Bài viết gần đây</h2>
-                            <a href="#" class="text-xs text-red-400 hover:underline">Quản lý tất cả</a>
+                            <a href="posts.php" class="text-xs text-red-400 hover:underline">Quản lý tất cả</a>
                         </div>
-                        <div class="border border-dashed border-slate-700 rounded-xl p-4 text-xs text-slate-400">
-                            Đây là khu vực sẽ hiển thị danh sách bài (title, status, ngày đăng).
-                            Khi làm backend, bạn có thể reuse API <code>/backend/routes/posts.php</code> hoặc viết controller riêng cho admin.
-                        </div>
+                        <?php if (empty($recentPosts)): ?>
+                            <div class="border border-dashed border-slate-700 rounded-xl p-4 text-xs text-slate-400 text-center">
+                                Chưa có bài viết nào. Hãy tạo bài đầu tiên trong mục "Bài viết (Blog)".
+                            </div>
+                        <?php else: ?>
+                            <div class="border border-slate-800 rounded-xl text-xs overflow-hidden">
+                                <table class="min-w-full">
+                                    <thead class="bg-slate-900/80 text-slate-400 uppercase tracking-wide">
+                                        <tr>
+                                            <th class="px-3 py-2 text-left">Tiêu đề</th>
+                                            <th class="px-3 py-2 text-left">Trạng thái</th>
+                                            <th class="px-3 py-2 text-left">Cập nhật</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-800">
+                                        <?php foreach ($recentPosts as $post): ?>
+                                            <tr class="hover:bg-slate-900/60">
+                                                <td class="px-3 py-2">
+                                                    <a href="post-form.php?id=<?= (int) $post['id'] ?>" class="text-slate-100 hover:text-red-300">
+                                                        <?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?>
+                                                    </a>
+                                                </td>
+                                                <td class="px-3 py-2">
+                                                    <?php if ($post['status'] === 'published'): ?>
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                                            Đã xuất bản
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-600/20 text-slate-200 border border-slate-500/40">
+                                                            Nháp
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="px-3 py-2 text-slate-400">
+                                                    <?= $post['updated_at'] ? date('d/m/Y H:i', strtotime($post['updated_at'])) : '—' ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">

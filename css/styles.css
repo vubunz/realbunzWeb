@@ -25,7 +25,8 @@
 
 /* ==================== TRANSITIONS ==================== */
 * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* ==================== COUNTDOWN ANIMATIONS ==================== */
@@ -94,4 +95,57 @@
   .countdown-number {
     animation: none; /* Tắt animation trên mobile để tăng performance */
   }
+}
+
+/* ==================== GLOBAL INPUT & BUTTON STYLES (BLUE THEME) ==================== */
+
+/* Input, textarea với viền + nền gradient trắng -> xanh da trời (dễ nhìn hơn) */
+.input-main {
+  width: 100%;
+  border-radius: 0.75rem; /* giống rounded-xl */
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #38bdf8;
+  background-image: linear-gradient(90deg, #ffffff, #e0f2fe);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.input-main::placeholder {
+  color: #9ca3af;
+}
+
+.input-main:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  background-image: linear-gradient(90deg, #ffffff, #bae6fd, #0ea5e9);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+}
+
+/* Nút chính với gradient trắng -> xanh da trời */
+.btn-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #0f172a;
+  background-image: linear-gradient(90deg, #e0f2fe, #38bdf8);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+  border: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    background-image 0.15s ease;
+}
+
+.btn-main:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.28);
+  background-image: linear-gradient(90deg, #ffffff, #bae6fd, #0ea5e9);
+}
+
+.btn-main:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
 }

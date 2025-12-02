@@ -11,5 +11,8 @@ const DB_NAME = 'realbunzWebsite';
 const DB_USER = 'root';
 const DB_PASS = '';
 
+// Email nhận liên hệ (thay bằng email thật của bạn khi deploy)
+const CONTACT_EMAIL = 'you@example.com';
+
 // Thiết lập timezone mặc định (nên trùng với server)
 date_default_timezone_set('Asia/Ho_Chi_Minh');

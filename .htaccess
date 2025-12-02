@@ -1,0 +1,28 @@
+RewriteEngine On
+
+DirectoryIndex index.php index.html
+
+# Nếu trỏ đúng tới file/thư mục thì không rewrite
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Ẩn .php: /admin/posts -> /admin/posts.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.+?)/?$ $1.php [L,QSA]
+
+# Các route ngắn cho admin (tuỳ chọn, nhưng rõ ràng)
+RewriteRule ^admin/?$ admin/index.php [L,QSA]
+RewriteRule ^admin/bai-viet/?$ admin/posts.php [L,QSA]
+
+# Route cho blog
+RewriteRule ^blog/?$ blog/index.php [L,QSA]
+
+# Bài viết chi tiết: /blog/{category}/{slug}
+RewriteRule ^blog/([^/]+)/([^/]+)/?$ blog/post.php?category=$1&slug=$2 [L,QSA]
+
+# Chuyên mục: /blog/{category}
+RewriteRule ^blog/([^/]+)/?$ blog/category.php?slug=$1 [L,QSA]
+
+

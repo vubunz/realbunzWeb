@@ -11,11 +11,22 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
 
 $errors = [];
 $isEdit = false;
+
+// Danh sách category cố định cho blog
+$CATEGORIES = [
+    'y-nghia-tet' => 'Ý Nghĩa Tết Nguyên Đán',
+    'mon-an-truyen-thong' => 'Món Ăn Truyền Thống',
+    'trang-tri-nha-cua' => 'Trang Trí Nhà Cửa',
+    'tro-choi-dan-gian' => 'Trò Chơi Dân Gian',
+];
+
 $post = [
     'id' => null,
     'title' => '',
     'slug' => '',
+    'category' => 'y-nghia-tet',
     'summary' => '',
+    'thumbnail' => '',
     'content' => '',
     'status' => 'draft',
     'published_at' => null,
@@ -40,7 +51,9 @@ if (isset($_GET['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $post['title'] = trim($_POST['title'] ?? '');
     $post['slug'] = trim($_POST['slug'] ?? '');
+    $post['category'] = trim($_POST['category'] ?? '');
     $post['summary'] = trim($_POST['summary'] ?? '');
+    $post['thumbnail'] = trim($_POST['thumbnail'] ?? '');
     $post['content'] = trim($_POST['content'] ?? '');
     $post['status'] = $_POST['status'] ?? 'draft';
     $publishedInput = trim($_POST['published_at'] ?? '');
@@ -60,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $post['status'] = 'draft';
     }
 
+    if (!array_key_exists($post['category'], $CATEGORIES)) {
+        $post['category'] = 'y-nghia-tet';
+    }
+
     if ($post['status'] === 'published' && !$post['published_at']) {
         $post['published_at'] = date('Y-m-d H:i:s');
     }
@@ -71,7 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     UPDATE posts
                     SET title = :title,
                         slug = :slug,
+                        category = :category,
                         summary = :summary,
+                        thumbnail = :thumbnail,
                         content = :content,
                         status = :status,
                         published_at = :published_at,
@@ -81,7 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([
                     'title' => $post['title'],
                     'slug' => $post['slug'],
+                    'category' => $post['category'],
                     'summary' => $post['summary'],
+                    'thumbnail' => $post['thumbnail'],
                     'content' => $post['content'],
                     'status' => $post['status'],
                     'published_at' => $post['published_at'],
@@ -89,13 +110,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             } else {
                 $stmt = $pdo->prepare("
-                    INSERT INTO posts (title, slug, summary, content, status, published_at, created_at, updated_at)
-                    VALUES (:title, :slug, :summary, :content, :status, :published_at, NOW(), NOW())
+                    INSERT INTO posts (title, slug, category, summary, thumbnail, content, status, published_at, created_at, updated_at)
+                    VALUES (:title, :slug, :category, :summary, :thumbnail, :content, :status, :published_at, NOW(), NOW())
                 ");
                 $stmt->execute([
                     'title' => $post['title'],
                     'slug' => $post['slug'],
+                    'category' => $post['category'],
                     'summary' => $post['summary'],
+                    'thumbnail' => $post['thumbnail'],
                     'content' => $post['content'],
                     'status' => $post['status'],
                     'published_at' => $post['published_at'],
@@ -125,10 +148,157 @@ function slugify(string $text): string
         return 'post';
     }
 
-    $converted = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
-    if ($converted !== false) {
-        $text = $converted;
-    }
+    // Chuẩn hoá tiếng Việt về không dấu
+    $vietnameseMap = [
+        // a
+        'à' => 'a',
+        'á' => 'a',
+        'ả' => 'a',
+        'ã' => 'a',
+        'ạ' => 'a',
+        'ă' => 'a',
+        'ằ' => 'a',
+        'ắ' => 'a',
+        'ẳ' => 'a',
+        'ẵ' => 'a',
+        'ặ' => 'a',
+        'â' => 'a',
+        'ầ' => 'a',
+        'ấ' => 'a',
+        'ẩ' => 'a',
+        'ẫ' => 'a',
+        'ậ' => 'a',
+        // A
+        'À' => 'A',
+        'Á' => 'A',
+        'Ả' => 'A',
+        'Ã' => 'A',
+        'Ạ' => 'A',
+        'Ă' => 'A',
+        'Ằ' => 'A',
+        'Ắ' => 'A',
+        'Ẳ' => 'A',
+        'Ẵ' => 'A',
+        'Ặ' => 'A',
+        'Â' => 'A',
+        'Ầ' => 'A',
+        'Ấ' => 'A',
+        'Ẩ' => 'A',
+        'Ẫ' => 'A',
+        'Ậ' => 'A',
+        // e
+        'è' => 'e',
+        'é' => 'e',
+        'ẻ' => 'e',
+        'ẽ' => 'e',
+        'ẹ' => 'e',
+        'ê' => 'e',
+        'ề' => 'e',
+        'ế' => 'e',
+        'ể' => 'e',
+        'ễ' => 'e',
+        'ệ' => 'e',
+        // E
+        'È' => 'E',
+        'É' => 'E',
+        'Ẻ' => 'E',
+        'Ẽ' => 'E',
+        'Ẹ' => 'E',
+        'Ê' => 'E',
+        'Ề' => 'E',
+        'Ế' => 'E',
+        'Ể' => 'E',
+        'Ễ' => 'E',
+        'Ệ' => 'E',
+        // i
+        'ì' => 'i',
+        'í' => 'i',
+        'ỉ' => 'i',
+        'ĩ' => 'i',
+        'ị' => 'i',
+        // I
+        'Ì' => 'I',
+        'Í' => 'I',
+        'Ỉ' => 'I',
+        'Ĩ' => 'I',
+        'Ị' => 'I',
+        // o
+        'ò' => 'o',
+        'ó' => 'o',
+        'ỏ' => 'o',
+        'õ' => 'o',
+        'ọ' => 'o',
+        'ô' => 'o',
+        'ồ' => 'o',
+        'ố' => 'o',
+        'ổ' => 'o',
+        'ỗ' => 'o',
+        'ộ' => 'o',
+        'ơ' => 'o',
+        'ờ' => 'o',
+        'ớ' => 'o',
+        'ở' => 'o',
+        'ỡ' => 'o',
+        'ợ' => 'o',
+        // O
+        'Ò' => 'O',
+        'Ó' => 'O',
+        'Ỏ' => 'O',
+        'Õ' => 'O',
+        'Ọ' => 'O',
+        'Ô' => 'O',
+        'Ồ' => 'O',
+        'Ố' => 'O',
+        'Ổ' => 'O',
+        'Ỗ' => 'O',
+        'Ộ' => 'O',
+        'Ơ' => 'O',
+        'Ờ' => 'O',
+        'Ớ' => 'O',
+        'Ở' => 'O',
+        'Ỡ' => 'O',
+        'Ợ' => 'O',
+        // u
+        'ù' => 'u',
+        'ú' => 'u',
+        'ủ' => 'u',
+        'ũ' => 'u',
+        'ụ' => 'u',
+        'ư' => 'u',
+        'ừ' => 'u',
+        'ứ' => 'u',
+        'ử' => 'u',
+        'ữ' => 'u',
+        'ự' => 'u',
+        // U
+        'Ù' => 'U',
+        'Ú' => 'U',
+        'Ủ' => 'U',
+        'Ũ' => 'U',
+        'Ụ' => 'U',
+        'Ư' => 'U',
+        'Ừ' => 'U',
+        'Ứ' => 'U',
+        'Ử' => 'U',
+        'Ữ' => 'U',
+        'Ự' => 'U',
+        // y
+        'ỳ' => 'y',
+        'ý' => 'y',
+        'ỷ' => 'y',
+        'ỹ' => 'y',
+        'ỵ' => 'y',
+        // Y
+        'Ỳ' => 'Y',
+        'Ý' => 'Y',
+        'Ỷ' => 'Y',
+        'Ỹ' => 'Y',
+        'Ỵ' => 'Y',
+        // d
+        'đ' => 'd',
+        'Đ' => 'D',
+    ];
+    $text = strtr($text, $vietnameseMap);
     $text = strtolower($text);
     $text = preg_replace('/[^a-z0-9]+/i', '-', $text);
     $text = trim($text, '-');
@@ -179,11 +349,11 @@ function ensure_unique_slug(PDO $pdo, string $slug, ?int $currentId = null): str
                 </div>
             </div>
             <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
-                <a href="index.php" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300">
+                <a href="index" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300">
                     <span>📊</span>
                     <span>Tổng quan</span>
                 </a>
-                <a href="posts.php" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 text-slate-50 font-semibold">
+                <a href="bai-viet" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 text-slate-50 font-semibold">
                     <span>📝</span>
                     <span>Bài viết (Blog)</span>
                 </a>
@@ -198,7 +368,7 @@ function ensure_unique_slug(PDO $pdo, string $slug, ?int $currentId = null): str
                 </div>
                 <div class="flex items-center gap-3 text-xs">
                     <span class="hidden sm:inline text-slate-500"><?= htmlspecialchars($adminName, ENT_QUOTES, 'UTF-8') ?></span>
-                    <a href="posts.php" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-700 text-slate-200">
+                    <a href="bai-viet" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-slate-700 text-slate-200">
                         ← Quay lại danh sách
                     </a>
                 </div>
@@ -232,6 +402,31 @@ function ensure_unique_slug(PDO $pdo, string $slug, ?int $currentId = null): str
                                 value="<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>"
                                 class="w-full mt-1 rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
                             <p class="text-[11px] text-slate-500 mt-1">Để trống hệ thống sẽ tự tạo từ tiêu đề.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs text-slate-400">Chuyên mục</label>
+                            <select
+                                name="category"
+                                class="w-full mt-1 rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <?php foreach ($CATEGORIES as $catSlug => $catLabel): ?>
+                                    <option value="<?= htmlspecialchars($catSlug, ENT_QUOTES, 'UTF-8') ?>" <?= $post['category'] === $catSlug ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($catLabel, ENT_QUOTES, 'UTF-8') ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-400">Ảnh đại diện (URL)</label>
+                            <input
+                                type="text"
+                                name="thumbnail"
+                                value="<?= htmlspecialchars($post['thumbnail'], ENT_QUOTES, 'UTF-8') ?>"
+                                class="w-full mt-1 rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                                placeholder="https://example.com/anh-bai-viet.jpg" />
+                            <p class="text-[11px] text-slate-500 mt-1">Sau này có thể thay bằng upload ảnh.</p>
                         </div>
                     </div>
 

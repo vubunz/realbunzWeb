@@ -12,18 +12,28 @@ $posts = [];
 $error = '';
 $flash = '';
 
+// Danh sách category để hiển thị tên đẹp
+$CATEGORIES = [
+    'y-nghia-tet' => 'Ý Nghĩa Tết',
+    'mon-an-truyen-thong' => 'Món Ăn',
+    'trang-tri-nha-cua' => 'Trang Trí',
+    'tro-choi-dan-gian' => 'Trò Chơi',
+];
+
 if (isset($_GET['status'])) {
     if ($_GET['status'] === 'saved') {
         $flash = 'Đã lưu bài viết thành công.';
     } elseif ($_GET['status'] === 'deleted') {
         $flash = 'Đã xóa bài viết.';
+    } elseif ($_GET['status'] === 'error' && isset($_GET['message'])) {
+        $error = urldecode($_GET['message']);
     }
 }
 
 try {
     $pdo = get_db_connection();
     $stmt = $pdo->query("
-        SELECT id, title, slug, status, published_at, updated_at
+        SELECT id, title, slug, category, status, published_at, updated_at
         FROM posts
         ORDER BY created_at DESC, id DESC
     ");
@@ -75,11 +85,11 @@ try {
                 </div>
             </div>
             <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
-                <a href="index.php" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300">
+                <a href="index" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-800 text-slate-300">
                     <span>📊</span>
                     <span>Tổng quan</span>
                 </a>
-                <a href="posts.php" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 text-slate-50 font-semibold">
+                <a href="bai-viet" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-800 text-slate-50 font-semibold">
                     <span>📝</span>
                     <span>Bài viết (Blog)</span>
                 </a>
@@ -133,6 +143,7 @@ try {
                             <tr>
                                 <th class="px-4 py-3 text-left">Tiêu đề</th>
                                 <th class="px-4 py-3 text-left">Slug</th>
+                                <th class="px-4 py-3 text-left">Chuyên mục</th>
                                 <th class="px-4 py-3 text-left">Trạng thái</th>
                                 <th class="px-4 py-3 text-left">Ngày đăng</th>
                                 <th class="px-4 py-3 text-left">Cập nhật</th>
@@ -151,6 +162,12 @@ try {
                                     <tr class="hover:bg-slate-900/50">
                                         <td class="px-4 py-3 font-medium text-slate-100"><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></td>
                                         <td class="px-4 py-3 text-slate-400"><?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?></td>
+                                        <td class="px-4 py-3 text-slate-400">
+                                            <?php
+                                            $catKey = $post['category'] ?? '';
+                                            echo isset($CATEGORIES[$catKey]) ? htmlspecialchars($CATEGORIES[$catKey], ENT_QUOTES, 'UTF-8') : '—';
+                                            ?>
+                                        </td>
                                         <td class="px-4 py-3">
                                             <?php
                                             $status = $post['status'] ?? 'draft';
@@ -169,7 +186,7 @@ try {
                                         <td class="px-4 py-3 text-right">
                                             <div class="inline-flex gap-2 text-xs">
                                                 <a href="post-form.php?id=<?= (int) $post['id'] ?>" class="px-3 py-1.5 rounded-full border border-slate-700 text-slate-200 hover:bg-slate-800">Sửa</a>
-                                                <button class="px-3 py-1.5 rounded-full border border-red-500/60 text-red-300 hover:bg-red-500/10">Xóa</button>
+                                                <a href="delete-post.php?id=<?= (int) $post['id'] ?>" class="px-3 py-1.5 rounded-full border border-red-500/60 text-red-300 hover:bg-red-500/10" onclick="return confirm('Xác nhận xóa bài này?');">Xóa</a>
                                             </div>
                                         </td>
                                     </tr>
