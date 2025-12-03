@@ -44,20 +44,20 @@
 </head>
 
 <body
-    class="min-h-screen font-sans bg-[#fff7ed] dark:bg-slate-950 text-slate-800 dark:text-slate-100">
+    class="min-h-screen font-sans bg-[#e0f2fe] dark:bg-slate-950 text-slate-800 dark:text-slate-100">
     <!-- ==================== HEADER ==================== -->
     <header
-        class="sticky top-0 z-50 border-b border-[#f97373]/30 bg-[#fff7ed]/90 dark:bg-slate-950/90 backdrop-blur">
+        class="sticky top-0 z-50 border-b border-[#93c5fd]/30 bg-[#e0f2fe]/90 dark:bg-slate-950/90 backdrop-blur">
         <div
             class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <a href="/#home" class="flex items-center gap-3">
                 <div
-                    class="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-500 to-amber-400 flex items-center justify-center shadow-md border border-white/60">
+                    class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-sky-400 flex items-center justify-center shadow-md border border-white/60">
                     <span class="text-2xl">🧧</span>
                 </div>
                 <div class="leading-tight">
                     <p
-                        class="text-lg md:text-xl font-extrabold bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
+                        class="text-lg md:text-xl font-extrabold bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">
                         Tết Bính Ngọ 2026
                     </p>
                     <p class="text-[11px] text-slate-500">
@@ -68,10 +68,10 @@
 
             <nav
                 class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-700 dark:text-slate-200">
-                <a href="/#home" class="hover:text-red-600 dark:hover:text-red-400">Trang chủ</a>
-                <a href="/#about" class="hover:text-red-600 dark:hover:text-red-400">About</a>
-                <a href="/blog" class="hover:text-red-600 dark:hover:text-red-400">Blog</a>
-                <a href="/contact" class="hover:text-red-600 dark:hover:text-red-400">Contact</a>
+                <a href="/#home" class="hover:text-blue-600 dark:hover:text-blue-400">Trang chủ</a>
+                <a href="/#about" class="hover:text-blue-600 dark:hover:text-blue-400">About</a>
+                <a href="/blog" class="hover:text-blue-600 dark:hover:text-blue-400">Blog</a>
+                <a href="/contact" class="hover:text-blue-600 dark:hover:text-blue-400">Contact</a>
             </nav>
 
             <button

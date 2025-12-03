@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/backend/config.php';
+require_once __DIR__ . '/backend/mailer.php';
 
 $successMessage = '';
 $errorMessage = '';
@@ -14,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errorMessage = 'Địa chỉ email không hợp lệ.';
     } else {
+        // Email gửi cho admin
         $subjectAdmin = 'Liên hệ mới từ Tết Bính Ngọ 2026';
         $bodyAdmin = "Bạn nhận được một liên hệ mới:\n\n"
             . "Họ tên: {$name}\n"
@@ -21,25 +23,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             . "Thời gian: " . date('d/m/Y H:i') . "\n\n"
             . "Nội dung:\n{$message}\n";
 
-        $headersAdmin = "From: {$email}\r\nReply-To: {$email}\r\n";
-
-        // Thư cảm ơn cho người gửi
+        // Email cảm ơn cho người gửi
         $subjectUser = 'Cảm ơn bạn đã liên hệ Tết Bính Ngọ 2026';
         $bodyUser = "Xin chào {$name},\n\n"
             . "Cảm ơn bạn đã liên hệ. Mình đã nhận được tin nhắn của bạn và sẽ phản hồi trong thời gian sớm nhất.\n\n"
             . "Nội dung bạn đã gửi:\n{$message}\n\n"
             . "Trân trọng,\nTết Bính Ngọ 2026";
-        $headersUser = "From: " . CONTACT_EMAIL . "\r\nReply-To: " . CONTACT_EMAIL . "\r\n";
 
-        // Thử gửi mail (trên local XAMPP có thể chưa cấu hình SMTP nên mail() có thể trả false)
-        $okAdmin = @mail(CONTACT_EMAIL, $subjectAdmin, $bodyAdmin, $headersAdmin);
-        $okUser = @mail($email, $subjectUser, $bodyUser, $headersUser);
+        // Gửi email qua SMTP
+        $resultAdmin = sendEmail(CONTACT_EMAIL, $subjectAdmin, $bodyAdmin, $email);
+        $resultUser = sendEmail($email, $subjectUser, $bodyUser);
 
-        if ($okAdmin) {
+        if ($resultAdmin['success']) {
             $successMessage = 'Cảm ơn bạn! Liên hệ của bạn đã được gửi thành công.';
         } else {
-            // Dù mail không gửi được, vẫn báo là đã nhận để tránh làm người dùng khó chịu
-            $successMessage = 'Cảm ơn bạn! Tin nhắn đã được ghi nhận. Nếu có lỗi gửi mail trên server, mình sẽ kiểm tra lại sau.';
+            // Log lỗi (có thể ghi vào file log sau này)
+            error_log("SMTP Error: " . $resultAdmin['message']);
+            // Vẫn báo thành công để tránh làm người dùng khó chịu
+            $successMessage = 'Cảm ơn bạn! Tin nhắn đã được ghi nhận. Chúng tôi sẽ liên hệ lại với bạn sớm nhất.';
         }
     }
 }
